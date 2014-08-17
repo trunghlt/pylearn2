@@ -30,8 +30,6 @@ except ImportError:
         warnings.warn("Couldn't import collections.Counter. "
                       "StanfordSentimentTreebank is not available for use.")
 
-from tempfile import NamedTemporaryFile
-
 import numpy as np
 
 try:
@@ -51,7 +49,7 @@ except ImportError:
 
 from pylearn2.utils.string_utils import preprocess
 from pylearn2.sandbox.nlp.datasets.text_dataset import TextDataset
-
+from pylearn2.utils.web import unzip
 
 log = logging.getLogger(__name__)
 
@@ -99,7 +97,7 @@ class _StanfordSentimentTreebankFactory(object):
         """ return respective dataset from cached data """
         assert which_set in ['all', 'train', 'valid', 'test']
         if not cls.__data_exists():
-            cls.__download()
+            unzip(cls.ORIGIN_URL, cls.DATA_ROOT)
         if cls.sparse_sents is None or cls.scores is None:
             try:
                 cls.__load()
@@ -189,19 +187,3 @@ class _StanfordSentimentTreebankFactory(object):
             f.close()
         cls.scores = np.asarray(sent_scores)
 
-    @classmethod
-    def __download(cls):
-        """ Download original data and unzip it to data path  """
-        response = urllib2.urlopen(cls.ORIGIN_URL)
-        content = response.read()
-        with NamedTemporaryFile(delete=False) as f:
-            f.write(content)
-            f.close()
-            log.debug('Downloaded content has been saved to {}'.format(f.name))
-            with open(f.name) as g:
-                zfile = zipfile.ZipFile(g)
-                for name in zfile.namelist():
-                    log.debug(
-                        'Decompressing {} to {}'.format(name, cls.DATA_ROOT))
-                    zfile.extract(name, cls.DATA_ROOT)
-                g.close()

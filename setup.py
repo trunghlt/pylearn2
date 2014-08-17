@@ -67,7 +67,8 @@ setup(
     description='A machine learning library built on top of Theano.',
     license='BSD 3-clause license',
     long_description=open('README.rst').read(),
-    install_requires=['numpy>=1.5', 'theano', 'pyyaml', 'argparse'],
+    install_requires=['numpy>=1.5', 'theano', 'pyyaml', 'argparse', 'scipy>=0.13.0',
+                      'scikit-learn', 'gensim'],
     package_data={
         '': ['*.cu', '*.cuh', '*.h'],
     },

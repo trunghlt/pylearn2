@@ -58,21 +58,21 @@ class ProjectionLayer(Layer):
     """
     This layer can be used to project discrete labels into a continous space
     as done in e.g. language models. It takes labels as an input (IndexSpace)
-    and maps them to their continous embeddings and concatenates them.
+    and maps them to their continous vectors and concatenates them.
 
     Parameters
         ----------
     dim : int
-        The dimension of the embeddings. Note that this means that the
+        The dimension of the vectors. Note that this means that the
         output dimension is (dim * number of input labels)
     layer_name : string
         Layer name
     irange : numeric
        The range of the uniform distribution used to initialize the
-       embeddings. Can't be used with istdev.
+       vectors. Can't be used with istdev.
     istdev : numeric
         The standard deviation of the normal distribution used to
-        initialize the embeddings. Can't be used with irange.
+        initialize the vectors. Can't be used with irange.
     """
     def __init__(self, dim, layer_name, irange=None, istdev=None):
         """
