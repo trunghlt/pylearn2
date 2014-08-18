@@ -29,7 +29,7 @@ class WikipediaFirstBillionWords(WordVectorSpace):
     URL = "http://mattmahoney.net/dc/enwik9.zip"
     PYLEARN2_DATA_PATH = preprocess('${PYLEARN2_DATA_PATH}')
     DATA_PATH = os.path.join(PYLEARN2_DATA_PATH, "WikipediaFirstBillionWords")
-    ORIGINAL_DATA_FILE_NAME = "enwiki9"
+    ORIGINAL_DATA_FILE_NAME = "enwik9"
     TEXT_PROCESS_PERL = """
         #!/usr/bin/perl
 
@@ -92,12 +92,12 @@ class WikipediaFirstBillionWords(WordVectorSpace):
                                           self.ORIGINAL_DATA_FILE_NAME)
             if not os.path.exists(original_fname):
                 unzip(self.URL, self.DATA_PATH)
-            with NamedTemporaryFile(delete=True) as f:
+            with NamedTemporaryFile(delete=False) as f:
                 f.write(self.TEXT_PROCESS_PERL)
                 f.close()
-                with NamedTemporaryFile(delete=True) as pf:
-                    proc = subprocess.call(["perl", f.name, original_fname],
-                                           stdout=pf)
+                with NamedTemporaryFile(delete=False) as pf:
+                    subprocess.call(["perl", f.name, original_fname],
+                                    stdout=pf)
                     pf.flush()
                     sentences = LineSentence(pf.name)
                     model = Word2Vec(sentences, **params)
@@ -105,3 +105,6 @@ class WikipediaFirstBillionWords(WordVectorSpace):
         else:
             model = Word2Vec.load(os.path.join(self.DATA_PATH, fname))
         return model
+
+if __name__ == "__main__":
+    vectors = WikipediaFirstBillionWords()
