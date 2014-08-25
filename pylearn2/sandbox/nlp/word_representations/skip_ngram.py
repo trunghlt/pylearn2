@@ -80,7 +80,7 @@ class WikipediaFirstBillionWords(WordVectorSpace):
 
     def __init__(self):
         model = self._get_model()
-        super(self, WikipediaFirstBillionWords).__init__(model.index2word,
+        super(WikipediaFirstBillionWords, self).__init__(model.index2word,
                                                          model.syn0)
 
     def _get_model(self, size=100, window=5, min_count=5, workers=4):
